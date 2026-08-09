@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { getAllAccounts } from '../../api';
 import { formatAccountId, formatCustomerId, formatAccountNumber } from '../../utils/formatters';
 import { Wallet, Search, Filter, Eye, X, CheckCircle2, XCircle } from 'lucide-react';
@@ -117,9 +118,9 @@ export const AdminAccounts = () => {
       </div>
 
       {/* Account Details Modal */}
-      {selectedAccount && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(5, 8, 18, 0.85)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1.5rem' }}>
-          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '480px', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(129, 140, 248, 0.4)', position: 'relative' }}>
+      {selectedAccount && createPortal(
+        <div style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'rgba(5, 8, 18, 0.85)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '1.5rem', overflowY: 'auto' }} onClick={(e) => { if (e.target === e.currentTarget) setSelectedAccount(null); }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '480px', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(129, 140, 248, 0.4)', position: 'relative', maxHeight: '90vh', overflowY: 'auto' }}>
             <button onClick={() => setSelectedAccount(null)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
               <X size={24} />
             </button>
@@ -139,7 +140,8 @@ export const AdminAccounts = () => {
               Close Account View
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

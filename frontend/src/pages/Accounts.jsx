@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAccountsByCustomer, createAccount, closeAccount } from '../api';
 import { formatAccountId, formatAccountNumber } from '../utils/formatters';
-import { PlusCircle, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { PlusCircle, AlertCircle, CheckCircle, XCircle, X } from 'lucide-react';
 
 export const Accounts = () => {
   const { user } = useAuth();
@@ -151,22 +152,28 @@ export const Accounts = () => {
       </div>
 
       {/* Create Account Modal */}
-      {modalOpen && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '420px', padding: '2rem' }}>
-            <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '1.25rem' }}>Open New Bank Account</h3>
-            <form onSubmit={handleCreateAccount} noValidate>
-              <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="form-label">Account Type</label>
-                <select className="form-select" value={newAccData.accountType} onChange={(e) => setNewAccData({ ...newAccData, accountType: e.target.value })}>
-                  <option value="Savings">Savings Account</option>
-                  <option value="Current">Current Account</option>
-                  <option value="Salary">Salary Account</option>
+      {modalOpen && createPortal(
+        <div style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'rgba(5, 8, 18, 0.85)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '1.5rem', overflowY: 'auto' }} onClick={(e) => { if (e.target === e.currentTarget) setModalOpen(false); }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '440px', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(129, 140, 248, 0.3)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#fff', margin: 0 }}>Open New Bank Account</h3>
+              <button type="button" onClick={() => setModalOpen(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '0.25rem', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateAccount} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: '0.5rem', display: 'block' }}>Account Type</label>
+                <select className="form-select" value={newAccData.accountType} onChange={(e) => setNewAccData({ ...newAccData, accountType: e.target.value })} style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '10px', background: 'rgba(15, 23, 42, 0.8)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '0.95rem' }}>
+                  <option value="Savings" style={{ background: '#0f172a', color: '#fff' }}>Savings Account</option>
+                  <option value="Current" style={{ background: '#0f172a', color: '#fff' }}>Current Account</option>
+                  <option value="Salary" style={{ background: '#0f172a', color: '#fff' }}>Salary Account</option>
                 </select>
               </div>
 
-              <div className="form-group" style={{ marginBottom: '1.25rem' }}>
-                <label className="form-label">Branch Name</label>
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: '0.5rem', display: 'block' }}>Branch Name</label>
                 <input
                   type="text"
                   className={`form-input ${modalErrors.branchName ? 'form-input-error' : ''}`}
@@ -176,12 +183,13 @@ export const Accounts = () => {
                     setNewAccData({ ...newAccData, branchName: e.target.value });
                     if (modalErrors.branchName) setModalErrors({ ...modalErrors, branchName: null });
                   }}
+                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 />
-                {modalErrors.branchName && <div className="error-text"><AlertCircle size={13} /> {modalErrors.branchName}</div>}
+                {modalErrors.branchName && <div className="error-text" style={{ marginTop: '0.35rem' }}><AlertCircle size={13} /> {modalErrors.branchName}</div>}
               </div>
 
-              <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-                <label className="form-label">IFSC Code</label>
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: '#e2e8f0', marginBottom: '0.5rem', display: 'block' }}>IFSC Code</label>
                 <input
                   type="text"
                   className={`form-input ${modalErrors.ifscCode ? 'form-input-error' : ''}`}
@@ -192,17 +200,19 @@ export const Accounts = () => {
                     if (modalErrors.ifscCode) setModalErrors({ ...modalErrors, ifscCode: null });
                   }}
                   maxLength={11}
+                  style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '10px' }}
                 />
-                {modalErrors.ifscCode && <div className="error-text"><AlertCircle size={13} /> {modalErrors.ifscCode}</div>}
+                {modalErrors.ifscCode && <div className="error-text" style={{ marginTop: '0.35rem' }}><AlertCircle size={13} /> {modalErrors.ifscCode}</div>}
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
-                <button className="btn-secondary" type="button" style={{ flex: 1 }} onClick={() => setModalOpen(false)}>Cancel</button>
-                <button className="btn-primary" type="submit" style={{ flex: 1 }}>Create</button>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <button className="btn-secondary" type="button" style={{ flex: 1, padding: '0.75rem', borderRadius: '10px' }} onClick={() => setModalOpen(false)}>Cancel</button>
+                <button className="btn-primary" type="submit" style={{ flex: 1, padding: '0.75rem', borderRadius: '10px' }}>Create Account</button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

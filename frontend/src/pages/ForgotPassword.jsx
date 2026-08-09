@@ -49,8 +49,8 @@ export const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      await forgotPassword({ email: email.trim() });
-      setSuccess('Reset OTP generated! Check your console or mobile.');
+      const res = await forgotPassword({ email: email.trim() });
+      setSuccess(res.data?.message || 'Reset OTP generated!');
       setStep(2);
     } catch (err) {
       setFormError(err.response?.data?.message || 'Failed to process request for this email.');

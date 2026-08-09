@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAccountsByCustomer, transferMoney, confirmTransfer } from '../api';
 import { formatAccountNumber } from '../utils/formatters';
@@ -305,19 +306,22 @@ export const Transfer = () => {
       </div>
 
       {/* SUSPICIOUS TRANSACTION CONFIRMATION MODAL POPUP */}
-      {suspiciousModal && (
+      {suspiciousModal && createPortal(
         <div
           style={{
             position: 'fixed',
             inset: 0,
+            width: '100vw',
+            height: '100vh',
             background: 'rgba(5, 8, 18, 0.85)',
             backdropFilter: 'blur(12px)',
             WebkitBackdropFilter: 'blur(12px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 9999,
+            zIndex: 99999,
             padding: '1.5rem',
+            overflowY: 'auto',
             pointerEvents: 'auto'
           }}
         >
@@ -330,7 +334,9 @@ export const Transfer = () => {
               border: '1px solid rgba(245, 158, 11, 0.4)',
               boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(245, 158, 11, 0.2)',
               borderRadius: '20px',
-              textAlign: 'center'
+              textAlign: 'center',
+              maxHeight: '90vh',
+              overflowY: 'auto'
             }}
           >
             {/* Warning Icon Header */}
@@ -398,7 +404,8 @@ export const Transfer = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

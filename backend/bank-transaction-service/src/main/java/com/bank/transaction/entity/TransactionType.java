@@ -3,5 +3,9 @@ package com.bank.transaction.entity;
 public enum TransactionType {
 	Deposit,
 	Withdraw,
-	Transfer
+	Transfer,
+	DEPOSIT,
+	WITHDRAW,
+	TRANSFER
 }
+

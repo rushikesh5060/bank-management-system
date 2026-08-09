@@ -207,7 +207,9 @@ public class AuthServiceImpl implements AuthService {
 
         System.out.println("Password Reset OTP : " + generatedOtp);
 
-        return new ForgotPasswordResponse();
+        ForgotPasswordResponse response = new ForgotPasswordResponse();
+        response.setMessage("Reset OTP generated! [Demo OTP: " + generatedOtp + "]");
+        return response;
     }
 
     @Override

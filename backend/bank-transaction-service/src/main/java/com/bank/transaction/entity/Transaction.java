@@ -19,7 +19,7 @@ public class Transaction {
     //private Integer relatedAccountId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private TransactionType transactionType;
 
     @Column(nullable = false, precision = 18, scale = 2)
@@ -43,6 +43,7 @@ public class Transaction {
     //private Integer riskScore = 0;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(50)")
     private TransactionStatus status = TransactionStatus.Success;
 
     // Default Constructor

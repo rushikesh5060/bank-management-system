@@ -40,7 +40,9 @@ export const Transactions = () => {
     const matchesSearch =
       tx.referenceNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tx.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesType = typeFilter === 'ALL' || tx.transactionType === typeFilter;
+    const matchesType =
+      typeFilter === 'ALL' ||
+      (tx.transactionType && tx.transactionType.toUpperCase() === typeFilter.toUpperCase());
     return matchesSearch && matchesType;
   });
 
@@ -87,7 +89,7 @@ export const Transactions = () => {
             <option value="ALL">All Types</option>
             <option value="Deposit">Deposit</option>
             <option value="Withdraw">Withdraw</option>
-            <option value="TRANSFER">Transfer</option>
+            <option value="Transfer">Transfer</option>
           </select>
         </div>
       </div>
@@ -111,22 +113,26 @@ export const Transactions = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredTxns.map((tx) => (
-                <tr key={tx.transactionId} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '0.85rem', fontWeight: 600, color: '#818cf8' }}>{tx.referenceNumber}</td>
-                  <td style={{ padding: '0.85rem' }}>{tx.transactionType}</td>
-                  <td style={{ padding: '0.85rem', color: 'var(--text-muted)' }}>{new Date(tx.transactionTime).toLocaleString()}</td>
-                  <td style={{ padding: '0.85rem', fontWeight: 700, color: tx.transactionType === 'Deposit' ? '#34d399' : '#f43f5e' }}>
-                    {tx.transactionType === 'Deposit' ? '+' : '-'}₹{parseFloat(tx.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                  </td>
-                  <td style={{ padding: '0.85rem', color: '#fff' }}>₹{parseFloat(tx.availableBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                  <td style={{ padding: '0.85rem' }}>
-                    <span style={{ background: tx.status === 'Success' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)', color: tx.status === 'Success' ? '#34d399' : '#f87171', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
-                      {tx.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {filteredTxns.map((tx) => {
+                const isDeposit = tx.transactionType && tx.transactionType.toUpperCase() === 'DEPOSIT';
+                const isSuccess = tx.status && tx.status.toUpperCase() === 'SUCCESS';
+                return (
+                  <tr key={tx.transactionId} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '0.85rem', fontWeight: 600, color: '#818cf8' }}>{tx.referenceNumber}</td>
+                    <td style={{ padding: '0.85rem' }}>{tx.transactionType}</td>
+                    <td style={{ padding: '0.85rem', color: 'var(--text-muted)' }}>{new Date(tx.transactionTime).toLocaleString()}</td>
+                    <td style={{ padding: '0.85rem', fontWeight: 700, color: isDeposit ? '#34d399' : '#f43f5e' }}>
+                      {isDeposit ? '+' : '-'}₹{parseFloat(tx.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                    </td>
+                    <td style={{ padding: '0.85rem', color: '#fff' }}>₹{parseFloat(tx.availableBalance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                    <td style={{ padding: '0.85rem' }}>
+                      <span style={{ background: isSuccess ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)', color: isSuccess ? '#34d399' : '#f87171', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>
+                        {tx.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

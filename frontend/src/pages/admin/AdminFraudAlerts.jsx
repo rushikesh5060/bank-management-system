@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { getAllFraudLogs } from '../../api';
 import { ShieldAlert, Search, Filter, Eye, X, Bot, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 
@@ -163,9 +164,9 @@ export const AdminFraudAlerts = () => {
       </div>
 
       {/* Detailed Fraud Inspection Modal */}
-      {selectedRecord && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(5, 8, 18, 0.88)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1.5rem' }}>
-          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '640px', padding: '2.25rem', borderRadius: '24px', border: '1px solid rgba(244, 63, 94, 0.5)', boxShadow: '0 25px 60px rgba(0,0,0,0.9)', position: 'relative' }}>
+      {selectedRecord && createPortal(
+        <div style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'rgba(5, 8, 18, 0.88)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '1.5rem', overflowY: 'auto' }} onClick={(e) => { if (e.target === e.currentTarget) setSelectedRecord(null); }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '640px', padding: '2.25rem', borderRadius: '24px', border: '1px solid rgba(244, 63, 94, 0.5)', boxShadow: '0 25px 60px rgba(0,0,0,0.9)', position: 'relative', maxHeight: '90vh', overflowY: 'auto' }}>
             <button onClick={() => setSelectedRecord(null)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
               <X size={24} />
             </button>
@@ -205,7 +206,8 @@ export const AdminFraudAlerts = () => {
               Close Inspection View
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

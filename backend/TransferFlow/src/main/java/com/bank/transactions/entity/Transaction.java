@@ -33,7 +33,7 @@ public class Transaction {
     private Integer accountId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "transactionType", nullable = false, length = 30)
+    @Column(name = "transactionType", nullable = false, columnDefinition = "VARCHAR(50)")
     private TransactionType transactionType;
 
     @Column(name = "amount", nullable = false, precision = 15, scale = 2)
@@ -58,7 +58,7 @@ public class Transaction {
 //    private Integer riskScore;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false, columnDefinition = "VARCHAR(50)")
     private TransactionStatus status;
 
     public Transaction() {

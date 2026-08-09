@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { getAllCustomers, getAccountsByCustomer } from '../../api';
 import { formatCustomerId, formatAccountId, formatAccountNumber } from '../../utils/formatters';
 import { Users, Search, Eye, X, Mail, Phone, MapPin, Calendar, CreditCard, ShieldCheck } from 'lucide-react';
@@ -124,9 +125,9 @@ export const AdminCustomers = () => {
       </div>
 
       {/* Customer Inspection Modal */}
-      {selectedCustomer && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(5, 8, 18, 0.85)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, padding: '1.5rem' }}>
-          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '600px', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(6, 182, 212, 0.4)', position: 'relative' }}>
+      {selectedCustomer && createPortal(
+        <div style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'rgba(5, 8, 18, 0.85)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 99999, padding: '1.5rem', overflowY: 'auto' }} onClick={(e) => { if (e.target === e.currentTarget) setSelectedCustomer(null); }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '600px', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(6, 182, 212, 0.4)', position: 'relative', maxHeight: '90vh', overflowY: 'auto' }}>
             <button onClick={() => setSelectedCustomer(null)} style={{ position: 'absolute', top: '1.25rem', right: '1.25rem', background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
               <X size={24} />
             </button>
@@ -168,7 +169,8 @@ export const AdminCustomers = () => {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

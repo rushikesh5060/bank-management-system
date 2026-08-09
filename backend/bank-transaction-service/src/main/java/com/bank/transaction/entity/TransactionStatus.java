@@ -5,5 +5,11 @@ public enum TransactionStatus {
 	Pending,
 	Flagged,
 	Blocked,
-	Failed
+	Failed,
+	SUCCESS,
+	PENDING,
+	FLAGGED,
+	BLOCKED,
+	FAILED
 }
+
