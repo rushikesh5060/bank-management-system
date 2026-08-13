@@ -21,10 +21,8 @@ services:
   # 1. Bank Auth Service (Port 9090)
   bank-auth-service:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.springboot
-      args:
-        SERVICE_DIR: bank-auth-service
+      context: ./backend/bank-auth-service
+      dockerfile: Dockerfile
     container_name: bank-auth-service
     ports:
       - "9090:9090"
@@ -40,10 +38,8 @@ services:
   # 2. Bank Account Service (Port 8082)
   bank-account-service:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.springboot
-      args:
-        SERVICE_DIR: bank-account-service
+      context: ./backend/bank-account-service
+      dockerfile: Dockerfile
     container_name: bank-account-service
     ports:
       - "8082:8082"
@@ -59,10 +55,8 @@ services:
   # 3. Bank Transaction Service (Port 8086)
   bank-transaction-service:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.springboot
-      args:
-        SERVICE_DIR: bank-transaction-service
+      context: ./backend/bank-transaction-service
+      dockerfile: Dockerfile
     container_name: bank-transaction-service
     ports:
       - "8086:8086"
@@ -78,10 +72,8 @@ services:
   # 4. TransferFlow Service (Port 8083)
   transfer-flow-service:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.springboot
-      args:
-        SERVICE_DIR: TransferFlow
+      context: ./backend/TransferFlow
+      dockerfile: Dockerfile
     container_name: transfer-flow-service
     ports:
       - "8083:8083"
@@ -97,10 +89,8 @@ services:
   # 5. Bank Admin Service (Port 9098)
   bank-admin-service:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.springboot
-      args:
-        SERVICE_DIR: Bank-Admin
+      context: ./backend/Bank-Admin
+      dockerfile: Dockerfile
     container_name: bank-admin-service
     ports:
       - "9098:9098"
@@ -116,10 +106,8 @@ services:
   # 6. Bank IVR Service (Port 8084)
   bank-ivr-service:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.springboot
-      args:
-        SERVICE_DIR: bank-ivr-service
+      context: ./backend/bank-ivr-service
+      dockerfile: Dockerfile
     container_name: bank-ivr-service
     ports:
       - "8084:8084"
@@ -146,7 +134,7 @@ services:
       mysql-db:
         condition: service_healthy
 
-  # 8. React Frontend Web Application (Port 5173 / 80)
+  # 8. React Frontend Web Application (Port 80)
   frontend:
     build:
       context: ./frontend

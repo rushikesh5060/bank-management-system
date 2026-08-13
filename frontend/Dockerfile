@@ -1,4 +1,3 @@
-# Multi-stage Dockerfile for React Vite Frontend
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./

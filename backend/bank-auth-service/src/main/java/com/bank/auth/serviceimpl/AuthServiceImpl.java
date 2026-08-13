@@ -87,6 +87,14 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("PAN already exists");
         }
 
+        if (request.getDateOfBirth() == null) {
+            throw new RuntimeException("Date of birth is required");
+        }
+
+        if (java.time.Period.between(request.getDateOfBirth(), java.time.LocalDate.now()).getYears() < 18) {
+            throw new RuntimeException("Customer must be at least 18 years old to register");
+        }
+
         Customer customer = new Customer();
         customer.setFirstName(request.getFirstName());
         customer.setLastName(request.getLastName());

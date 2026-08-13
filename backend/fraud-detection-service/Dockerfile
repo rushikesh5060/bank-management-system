@@ -1,10 +1,9 @@
-# Multi-stage Dockerfile for .NET 8 Fraud Detection Service
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY FraudDetectionService.csproj ./
-RUN dotnet restore
+COPY ["FraudDetectionService.csproj", "./"]
+RUN dotnet restore "FraudDetectionService.csproj"
 COPY . .
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish "FraudDetectionService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app

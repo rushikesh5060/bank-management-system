@@ -7,7 +7,7 @@ export const Register = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    dateOfBirth: '1995-05-15',
+    dateOfBirth: '',
     gender: 'MALE',
     email: '',
     mobile: '',
@@ -26,6 +26,8 @@ export const Register = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const maxDobDate = new Date().toISOString().split('T')[0];
 
   const handleMobileChange = (e) => {
     // Restrict mobile input to digits only and max 10 characters
@@ -91,8 +93,8 @@ export const Register = () => {
 
     if (!formData.password) {
       errs.password = 'Password is required.';
-    } else if (formData.password.length < 6) {
-      errs.password = 'Password must be at least 6 characters.';
+    } else if (formData.password.length < 8) {
+      errs.password = 'Password must be at least 8 characters.';
     }
 
     if (!formData.confirmPassword) {
@@ -103,6 +105,19 @@ export const Register = () => {
 
     if (!formData.dateOfBirth) {
       errs.dateOfBirth = 'Date of birth is required.';
+    } else {
+      const dob = new Date(formData.dateOfBirth);
+      const now = new Date();
+      let age = now.getFullYear() - dob.getFullYear();
+      const monthDiff = now.getMonth() - dob.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dob.getDate())) {
+        age--;
+      }
+      if (isNaN(dob.getTime())) {
+        errs.dateOfBirth = 'Please enter a valid date of birth.';
+      } else if (age < 18) {
+        errs.dateOfBirth = 'You must be at least 18 years old to register.';
+      }
     }
 
     if (!formData.aadhaar) {
@@ -251,7 +266,7 @@ export const Register = () => {
               type="password"
               name="password"
               className={`form-input ${errors.password ? 'form-input-error' : ''}`}
-              placeholder="Min 6 characters"
+              placeholder="Min 8 characters"
               value={formData.password}
               onChange={handleChange}
             />
@@ -276,6 +291,7 @@ export const Register = () => {
             <input
               type="date"
               name="dateOfBirth"
+              max={maxDobDate}
               className={`form-input ${errors.dateOfBirth ? 'form-input-error' : ''}`}
               value={formData.dateOfBirth}
               onChange={handleChange}

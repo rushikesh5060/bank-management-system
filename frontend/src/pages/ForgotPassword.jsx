@@ -32,8 +32,8 @@ export const ForgotPassword = () => {
     }
     if (!newPassword) {
       errs.newPassword = 'New Password is required.';
-    } else if (newPassword.length < 6) {
-      errs.newPassword = 'Password must be at least 6 characters.';
+    } else if (newPassword.length < 8) {
+      errs.newPassword = 'Password must be at least 8 characters.';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -149,7 +149,7 @@ export const ForgotPassword = () => {
                 <input
                   type="password"
                   className={`form-input ${errors.newPassword ? 'form-input-error' : ''}`}
-                  placeholder="New Secure Password (Min 6 chars)"
+                  placeholder="New Secure Password (Min 8 chars)"
                   value={newPassword}
                   onChange={(e) => {
                     setNewPassword(e.target.value);
