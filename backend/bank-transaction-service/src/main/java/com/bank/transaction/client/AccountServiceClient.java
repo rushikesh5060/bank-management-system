@@ -56,7 +56,7 @@ public class AccountServiceClient {
         .accept(MediaType.APPLICATION_JSON)
         .bodyValue(request)
         .retrieve()
-                .bodyToMono(Void.class)
+                .toBodilessEntity()
                 .block();
     }
     
