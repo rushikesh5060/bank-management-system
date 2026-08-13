@@ -41,6 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (path.startsWith("/api/accounts/customer/") || 
             path.startsWith("/api/accounts/internal/") || 
             path.equals("/api/accounts/transfer") ||
+            path.contains("/balance") ||
             path.matches("^/api/accounts/\\d+$")) {
             filterChain.doFilter(request, response);
             return;
