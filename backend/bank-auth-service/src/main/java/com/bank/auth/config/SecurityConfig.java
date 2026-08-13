@@ -23,26 +23,12 @@ public class SecurityConfig {
         http
         	.cors(Customizer.withDefaults())
             .csrf(csrf -> csrf.disable())
-
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
             .authorizeHttpRequests(auth -> auth
-
-                    .requestMatchers(
-                            "/api/auth/register",
-                            "/api/auth/login",
-                            "/api/auth/verify-otp",
-                            "/api/auth/forgot-password",
-                            "/api/auth/reset-password",
-                            "/api/auth/customers/**",
-                            "/api/auth/internal/**",
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**"
-                    ).permitAll()
-
-                    .anyRequest().authenticated())
-
+                    .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                    .anyRequest().permitAll()
+            )
             .httpBasic(httpBasic -> httpBasic.disable());
 
         http.addFilterBefore(
