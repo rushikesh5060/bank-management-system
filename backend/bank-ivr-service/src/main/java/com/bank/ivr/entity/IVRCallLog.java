@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "IVRCallLog")
+@Table(name = "ivrcalllog")
 @Data
 @NoArgsConstructor
 public class IVRCallLog {
