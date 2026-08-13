@@ -76,15 +76,19 @@ export const Deposit = () => {
         description: description.trim(),
         transactionCity: city
       });
-      setSuccess(`Successfully deposited ₹${parseFloat(amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}! Reference: ${res.data?.data?.referenceNumber}`);
+      setSuccess(`Successfully deposited ₹${parseFloat(amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}! Reference: ${res.data?.data?.referenceNumber || res.data?.referenceNumber || 'TXN-SUCCESS'}`);
       setAmount('');
-      // Refresh accounts balance
-      if (user?.customerId) {
-        const refreshRes = await getAccountsByCustomer(user.customerId);
-        setAccounts(refreshRes.data?.data || []);
+      // Refresh accounts balance safely
+      try {
+        if (user?.customerId) {
+          const refreshRes = await getAccountsByCustomer(user.customerId);
+          setAccounts(refreshRes.data?.data || []);
+        }
+      } catch (refreshErr) {
+        console.warn('Account list refresh warning:', refreshErr);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Deposit failed.');
+      setError(err.response?.data?.message || err.message || 'Deposit failed.');
     } finally {
       setLoading(false);
     }
