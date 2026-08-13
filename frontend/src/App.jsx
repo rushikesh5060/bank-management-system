@@ -49,6 +49,14 @@ const AccessDenied = () => {
   );
 };
 
+// Root Route Guard
+const RootRedirect = () => {
+  const { isAuthenticated, role } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
+  return <Navigate to="/dashboard" replace />;
+};
+
 // Customer Protected Route Guard
 const CustomerRoute = ({ children }) => {
   const { isAuthenticated, role } = useAuth();
@@ -86,6 +94,9 @@ export const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
+          {/* Root Redirect */}
+          <Route path="/" element={<RootRedirect />} />
+
           {/* Public Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
