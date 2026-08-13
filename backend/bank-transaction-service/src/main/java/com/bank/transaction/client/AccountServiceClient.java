@@ -27,19 +27,23 @@ public class AccountServiceClient {
 
 
     public AccountResponse getAccountById(Integer accountId) {
+        String authHeader = getAuthorizationHeader();
 
-        ApiResponse<AccountResponse> response =
-        		webClient.get()
-                .uri("/api/accounts/{id}", accountId)
-                .header("Authorization", getAuthorizationHeader())
+        var requestSpec = webClient.get()
+                .uri("/api/accounts/{id}", accountId);
+
+        if (authHeader != null && !authHeader.isEmpty()) {
+            requestSpec.header("Authorization", authHeader);
+        }
+
+        ApiResponse<AccountResponse> response = requestSpec
                 .retrieve()
                 .bodyToMono(
                     new ParameterizedTypeReference<ApiResponse<AccountResponse>>() {}
                 )
                 .block();
 
-
-        if(response == null || response.getData() == null) {
+        if (response == null || response.getData() == null) {
             return null;
         }
 
@@ -48,27 +52,35 @@ public class AccountServiceClient {
 
     public void updateBalance(Integer accountId,
                               UpdateBalanceRequest request) {
+        String authHeader = getAuthorizationHeader();
 
-    	webClient.put()
-        .uri("/api/accounts/{id}/balance", accountId)
-        .header("Authorization", getAuthorizationHeader())
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
-        .bodyValue(request)
-        .retrieve()
+        var requestSpec = webClient.put()
+                .uri("/api/accounts/{id}/balance", accountId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request);
+
+        if (authHeader != null && !authHeader.isEmpty()) {
+            requestSpec.header("Authorization", authHeader);
+        }
+
+        requestSpec.retrieve()
                 .toBodilessEntity()
                 .block();
     }
     
     private String getAuthorizationHeader() {
-
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null) {
+        if (authentication == null || authentication.getPrincipal() == null) {
             return null;
         }
 
-        return "Bearer " + authentication.getPrincipal();
+        String principalStr = authentication.getPrincipal().toString();
+        if (principalStr.startsWith("Bearer ")) {
+            return principalStr;
+        }
+        return "Bearer " + principalStr;
     }
 }

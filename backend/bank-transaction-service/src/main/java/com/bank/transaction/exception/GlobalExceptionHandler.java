@@ -42,10 +42,14 @@ public class GlobalExceptionHandler {
             Exception ex) {
 
         ex.printStackTrace();
+        String msg = ex.getMessage();
+        if (msg == null || msg.trim().isEmpty()) {
+            msg = ex.getClass().getSimpleName();
+        }
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.failure("Something went wrong."));
+                .body(ApiResponse.failure(msg));
     }
 
 }
