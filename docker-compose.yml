@@ -48,9 +48,12 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SERVER_PORT: 8082
+      AUTH_SERVICE_BASE_URL: http://bank-auth-service:9090
     depends_on:
       mysql-db:
         condition: service_healthy
+      bank-auth-service:
+        condition: service_started
 
   # 3. Bank Transaction Service (Port 8086)
   bank-transaction-service:
@@ -65,9 +68,12 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SERVER_PORT: 8086
+      ACCOUNT_SERVICE_URL: http://bank-account-service:8082
     depends_on:
       mysql-db:
         condition: service_healthy
+      bank-account-service:
+        condition: service_started
 
   # 4. TransferFlow Service (Port 8083)
   transfer-flow-service:
@@ -82,9 +88,13 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SERVER_PORT: 8083
+      ACCOUNT_SERVICE_URL: http://bank-account-service:8082
+      FRAUD_API_URL: http://fraud-detection-service:5000/api/Fraud/check
     depends_on:
       mysql-db:
         condition: service_healthy
+      bank-account-service:
+        condition: service_started
 
   # 5. Bank Admin Service (Port 9098)
   bank-admin-service:
@@ -99,9 +109,15 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SERVER_PORT: 9098
+      AUTH_SERVICE_URL: http://bank-auth-service:9090
+      ACCOUNT_SERVICE_URL: http://bank-account-service:8082
+      TRANSACTION_SERVICE_URL: http://bank-transaction-service:8086
+      FRAUD_SERVICE_URL: http://fraud-detection-service:5000
     depends_on:
       mysql-db:
         condition: service_healthy
+      bank-auth-service:
+        condition: service_started
 
   # 6. Bank IVR Service (Port 8084)
   bank-ivr-service:
@@ -116,9 +132,13 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SERVER_PORT: 8084
+      ACCOUNT_SERVICE_BASE_URL: http://bank-account-service:8082
+      TRANSACTION_SERVICE_BASE_URL: http://transfer-flow-service:8083
     depends_on:
       mysql-db:
         condition: service_healthy
+      bank-account-service:
+        condition: service_started
 
   # 7. Fraud Detection Service (.NET 8 - Port 5000)
   fraud-detection-service:
