@@ -35,16 +35,25 @@ export const AIChatbot = () => {
 
     try {
       const res = await sendChatMessage(userMsg);
-      const botResponse = res.data?.response || 'I am processing your banking inquiry. How else can I assist?';
-      setMessages((prev) => [...prev, { sender: 'bot', text: botResponse }]);
+      const botResponse = res.data?.response || res.data?.Response || res.data?.data || (typeof res.data === 'string' ? res.data : null);
+      setMessages((prev) => [...prev, { sender: 'bot', text: botResponse || 'I am processing your banking inquiry. How else can I assist?' }]);
     } catch (err) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: 'bot',
-          text: 'AI Security Notice: Operational with local safety controls. I can help explain fraud rules, risk limits, and account protection.'
-        }
-      ]);
+      const q = userMsg.toLowerCase();
+      let fallback = `🤖 **Bank AI Assistant**:\nRegarding your query: "${userMsg}"\nOur banking system provides 24/7 digital banking services. You can manage accounts, transfer funds, or review transaction history directly from your customer dashboard.`;
+
+      if (q.includes('deposit') || q.includes('withdraw') || q.includes('add money') || q.includes('cash')) {
+        fallback = '💵 **Deposits & Withdrawals**:\nTo deposit or withdraw money, click "Deposit Money" or "Withdraw Money" from the left menu. Enter the amount and target account to complete the transaction immediately.';
+      } else if (q.includes('transfer') || q.includes('send money') || q.includes('upi') || q.includes('pay') || q.includes('neft')) {
+        fallback = '💸 **Fund Transfers**:\nYou can transfer funds instantly under the "Fund Transfer" tab. Transfers over ₹50,000 trigger our automated AI Fraud Guard modal to confirm transaction safety before processing.';
+      } else if (q.includes('balance') || q.includes('account') || q.includes('ifsc') || q.includes('savings')) {
+        fallback = '🏦 **Accounts & Balances**:\nView all your linked Savings, Current, and Salary accounts on the "My Accounts" page. Default IFSC code for accounts is `BKID000101`.';
+      } else if (q.includes('fraud') || q.includes('risk') || q.includes('security') || q.includes('flagged') || q.includes('blocked')) {
+        fallback = '🔒 **AI Security & Fraud Shield**:\nOur automated system monitors transfers for unusual amounts or geographical anomalies. If a transaction is flagged for review, you can verify it directly in the security dialog.';
+      } else if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('greetings')) {
+        fallback = '👋 Hello! How can I assist you with your banking needs today? Ask me about deposits, transfers, account balances, or security settings!';
+      }
+
+      setMessages((prev) => [...prev, { sender: 'bot', text: fallback }]);
     } finally {
       setLoading(false);
     }
